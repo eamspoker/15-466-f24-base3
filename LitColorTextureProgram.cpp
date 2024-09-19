@@ -68,6 +68,7 @@ LitColorTextureProgram::LitColorTextureProgram() {
 		"}\n"
 	,
 		//fragment shader:
+		// texture size code from: https://stackoverflow.com/questions/25803909/glsl-texture-size
 		"#version 330\n"
 		"uniform sampler2D TEX;\n"
 		"uniform int LIGHT_TYPE;\n"
@@ -83,11 +84,12 @@ LitColorTextureProgram::LitColorTextureProgram() {
 		"void main() {\n"
 		"	vec3 n = normalize(normal);\n"
 		"	vec3 e;\n"
+		"	float nl;\n"
 		"	if (LIGHT_TYPE == 0) { //point light \n"
-		"		vec3 l = (LIGHT_LOCATION - position);\n"
+		"		vec3 l = vec3(0.05);\n"
 		"		float dis2 = dot(l,l);\n"
 		"		l = normalize(l);\n"
-		"		float nl = max(0.0, dot(n, l)) / max(1.0, dis2);\n"
+		"		nl = max(0.0, dot(n, l)) / max(1.0, dis2);\n"
 		"		e = nl * LIGHT_ENERGY;\n"
 		"	} else if (LIGHT_TYPE == 1) { //hemi light \n"
 		"		e = (dot(n,-LIGHT_DIRECTION) * 0.5 + 0.5) * LIGHT_ENERGY;\n"
@@ -95,7 +97,7 @@ LitColorTextureProgram::LitColorTextureProgram() {
 		"		vec3 l = (LIGHT_LOCATION - position);\n"
 		"		float dis2 = dot(l,l);\n"
 		"		l = normalize(l);\n"
-		"		float nl = max(0.0, dot(n, l)) / max(1.0, dis2);\n"
+		"		nl = max(0.0, dot(n, l)) / max(1.0, dis2);\n"
 		"		float c = dot(l,-LIGHT_DIRECTION);\n"
 		"		nl *= smoothstep(LIGHT_CUTOFF,mix(LIGHT_CUTOFF,1.0,0.1), c);\n"
 		"		e = nl * LIGHT_ENERGY;\n"
@@ -103,6 +105,9 @@ LitColorTextureProgram::LitColorTextureProgram() {
 		"		e = max(0.0, dot(n,-LIGHT_DIRECTION)) * LIGHT_ENERGY;\n"
 		"	}\n"
 		"	vec4 albedo = texture(TEX, texCoord) * color;\n"
+		"	albedo.r *= position.x/10.0;\n"
+		"	albedo.g *= position.y/10.0;\n"
+		"	albedo.b *= position.z/10.0;\n"
 		"	fragColor = vec4(e*albedo.rgb, albedo.a);\n"
 		"}\n"
 	);
