@@ -191,6 +191,7 @@ void PlayMode::nextScene(size_t level_)
 	winlose_msg = "";
 	next_sound = 0;
 	
+	
 	Sound::stop_all_samples();
 
 	if (level == 1)
@@ -238,6 +239,8 @@ void PlayMode::nextScene(size_t level_)
 		curr_loop = Sound::loop_3D(*closest_sound.sound, 1.0f, closest_sound.transform->position, 10.0f);
 		curr_bgm = Sound::loop(*bgm, 0.45f);
 	} else {
+		num_discovered = 0;
+
 		scene = *main_scene1;
 		//get pointers to leg for convenience:
 		for (auto &transform : scene.transforms) {
@@ -572,23 +575,23 @@ void PlayMode::draw(glm::uvec2 const &drawable_size) {
 
 		if (!isLookingAtMap)
 		{
-			lines.draw_text("Mouse motion rotates camera; WASD moves; escape ungrabs mouse",
+			lines.draw_text("Mouse motion rotates camera; WASD moves; escape ungrabs mouse; space for mapspace for map",
 			glm::vec3(-aspect + 0.1f * H, -1.0 + 0.5f * H, 0.0),
 			glm::vec3(H, 0.0f, 0.0f), glm::vec3(0.0f, H, 0.0f),
 			glm::u8vec4(0x00, 0x00, 0x00, 0x00));
 		float ofs = 2.0f / drawable_size.y;
-		lines.draw_text("Mouse motion rotates camera; WASD moves; escape ungrabs mouse",
+		lines.draw_text("Mouse motion rotates camera; WASD moves; escape ungrabs mouse; space for map",
 			glm::vec3(-aspect + 0.1f * H + ofs, -1.0 + 0.5f * H + ofs, 0.0),
 			glm::vec3(H, 0.0f, 0.0f), glm::vec3(0.0f, H, 0.0f),
 			glm::u8vec4(0xff, 0xff, 0xff, 0x00));
 
 		} else {
-			lines.draw_text("Tab to choose building, enter to guess",
+			lines.draw_text("Tab to choose building, enter to guess, space to close",
 			glm::vec3(-aspect + 0.1f * H, -1.0 + 0.5f * H, 0.0),
 			glm::vec3(H, 0.0f, 0.0f), glm::vec3(0.0f, H, 0.0f),
 			glm::u8vec4(0x00, 0x00, 0x00, 0x00));
 		float ofs = 2.0f / drawable_size.y;
-		lines.draw_text("Tab to choose building, enter to guess",
+		lines.draw_text("Tab to choose building, enter to guess, space to close",
 			glm::vec3(-aspect + 0.1f * H + ofs, -1.0 + 0.5f * H + ofs, 0.0),
 			glm::vec3(H, 0.0f, 0.0f), glm::vec3(0.0f, H, 0.0f),
 			glm::u8vec4(0xff, 0xff, 0xff, 0x00));
@@ -598,34 +601,34 @@ void PlayMode::draw(glm::uvec2 const &drawable_size) {
 
 
 		lines.draw_text("Sounds lost: " + std::to_string(mistakes),
-			glm::vec3(-aspect + ((drawable_size.x/75)* H), -1.0 + 20.0f * H, 0.0),
+			glm::vec3(-aspect + ((33.0f)* H), -1.0 + 20.0f * H, 0.0),
 			glm::vec3(H, 0.0f, 0.0f), glm::vec3(0.0f, H, 0.0f),
 			glm::u8vec4(0x00, 0x00, 0x00, 0x00));
 		float ofs = 2.0f / drawable_size.y;
 		lines.draw_text("Sounds lost: " + std::to_string(mistakes),
-			glm::vec3(-aspect +((drawable_size.x/75)* H) + ofs, -1.0 + 20.0f * H + ofs, 0.0),
+			glm::vec3(-aspect +((33.0f)* H) + ofs, -1.0 + 20.0f * H + ofs, 0.0),
 			glm::vec3(H, 0.0f, 0.0f), glm::vec3(0.0f, H, 0.0f),
 			glm::u8vec4(0xff, 0xff, 0xff, 0x00));
 
 
 	constexpr float H3 = 0.07f;
 	lines.draw_text("Places discovered: ",
-			glm::vec3(-aspect + ((drawable_size.x/60)* H3), -1.0 + (23.0f * H3), 0.0),
+			glm::vec3(-aspect + ((37.0f)* H3), -1.0 + (23.0f * H3), 0.0),
 			glm::vec3(H3, 0.0f, 0.0f), glm::vec3(0.0f, H3, 0.0f),
 			glm::u8vec4(0x00, 0x00, 0x00, 0x00));
 		lines.draw_text("Places discovered: ",
-			glm::vec3(-aspect +((drawable_size.x/60)* H3) + ofs, -1.0 + (23.0f* H3) + ofs, 0.0),
+			glm::vec3(-aspect +((37.0f)* H3) + ofs, -1.0 + (23.0f* H3) + ofs, 0.0),
 			glm::vec3(H3, 0.0f, 0.0f), glm::vec3(0.0f, H3, 0.0f),
 			glm::u8vec4(0xff, 0xff, 0xff, 0x00));
 
 	for (size_t i = 0; i < num_discovered; i++)
 	{
 		lines.draw_text(places[i],
-			glm::vec3(-aspect + ((drawable_size.x/65)* H3), -1.0 + ((23.0f-(i+1.0)) * H3), 0.0),
+			glm::vec3(-aspect + ((37.0f)* H3), -1.0 + ((23.0f-(i+1.0)) * H3), 0.0),
 			glm::vec3(H3, 0.0f, 0.0f), glm::vec3(0.0f, H3, 0.0f),
 			glm::u8vec4(0x00, 0x00, 0x00, 0x00));
 		lines.draw_text(places[i],
-			glm::vec3(-aspect +((drawable_size.x/65)* H3) + ofs, -1.0 + ((23.0f-(i+1.0)) * H3) + ofs, 0.0),
+			glm::vec3(-aspect +((37.0f)* H3) + ofs, -1.0 + ((23.0f-(i+1.0)) * H3) + ofs, 0.0),
 			glm::vec3(H3, 0.0f, 0.0f), glm::vec3(0.0f, H3, 0.0f),
 			glm::u8vec4(0xff, 0xff, 0xff, 0x00));
 
